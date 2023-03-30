@@ -33,7 +33,7 @@ services:
       - database
 
   zahori-server:
-    image: zahoriaut/zahori-server:0.1.16
+    image: zahoriaut/zahori-server:${ZAHORI_VERSION}
     ports:
       - "${ZAHORI_SERVER_PORT}:${ZAHORI_SERVER_PORT}"
     network_mode: bridge
@@ -62,6 +62,19 @@ services:
      - flyway
      - consul
      - selenoid-ui
+
+  zahori-front:
+    image: zahoriaut/zahori-frontend:${ZAHORI_VERSION}
+    ports:
+      - "${ZAHORI_FRONT_PORT}:80"
+    network_mode: bridge
+    links:
+      - zahori-server
+    environment:
+      - ZAHORI_SERVER_PORT=${ZAHORI_SERVER_PORT}
+      - ZAHORI_SERVER_HOST=${ZAHORI_SERVER_HOST}
+    depends_on:
+      - zahori-server
 
   selenoid:
     image: "aerokube/selenoid:1.10.10"
